@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TikTok Login</title>
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<header><img src="icon.png" alt=""><a href="./">Skygawker Clip Uploader</a></header>
+<nav><a href="./">Home</a><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a></nav>
+
+<h1 id="title">Login with TikTok</h1>
+<p id="msg" class="muted">This page receives the authorization result from TikTok. Start the connection from the Telegram bot.</p>
+<div class="card" id="box" hidden><code id="code"></code></div>
+<p><button id="copy" hidden>Copy code</button></p>
+
+<footer>&copy; 2026 Skygawker &middot; Contact: <a href="https://github.com/Skygawker">github.com/Skygawker</a></footer>
+</main>
+<script>
+const q = new URLSearchParams(location.search);
+const code = q.get("code"), state = q.get("state"), err = q.get("error");
+const el = id => document.getElementById(id);
+if (code) {
+  // state carries the bot's session id, so the bot knows whose code this is
+  const value = state ? state + ":" + code : code;
+  el("title").textContent = "Almost done";
+  el("msg").textContent = "Copy this code and send it to the Telegram bot to finish connecting your TikTok account.";
+  el("code").textContent = value;
+  el("box").hidden = false;
+  el("copy").hidden = false;
+  el("copy").onclick = () => navigator.clipboard.writeText(value).then(() => { el("copy").textContent = "Copied ✓"; });
+} else if (err) {
+  el("title").textContent = "Connection cancelled";
+  el("msg").textContent = "TikTok returned: " + err + (q.get("error_description") ? " — " + q.get("error_description") : "");
+}
+</script>
+</body>
+</html>
